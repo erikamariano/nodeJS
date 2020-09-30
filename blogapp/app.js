@@ -2,12 +2,12 @@
 const express = require("express");
 const handlebars = require("express-handlebars");
 const bodyParser = require("body-parser");
-//const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const app = express();
 
 const admin = require('./routes/admin');
 
-const path = require('path'); //serve para maniplurar pastas (trabalhar com diretórios)
+const path = require('path'); //serve para manipular pastas (trabalhar com diretórios)
 
 //Configurações
     //Configurando BodyParser
@@ -17,7 +17,12 @@ const path = require('path'); //serve para maniplurar pastas (trabalhar com dire
     app.engine('handlebars', handlebars({defaultLayout:'main'}));
     app.set('view engine', 'handlebars');
     //Confuigurando Mongoose
-    //em breve
+    mongoose.Promise = global.Promisse;
+    mongoose.connect('mongodb://localhost/blogapp').then(() => {
+        console.log("Conectado ao Mongo!");
+    }) catch((err) => {
+        console.log("Erro ao se conectar ao Mongo: " + err);
+    })
 
     //Configurando a pasta public
     app.use(express.static(path.join(__dirname, 'public')));

@@ -1,4 +1,4 @@
-//Documento para guardar todas a sminhas rotas da página admin
+//Documento para guardar todas as minhas rotas da página admin
 const express = require("express");
 const router = express.Router();
 
