@@ -1,6 +1,11 @@
-//Documento para guardar todas a sminhas rotas da página admin
+//Documento para guardar todas as minhas rotas da página admin
 const express = require("express");
 const router = express.Router();
+
+//Chamar um model que está em um documento externo
+const mongoose = require('mongoose'); //isso é para a rota 'post', que vai add dados no db.
+require('../models/Categoria'); //para chamar o modelo 'Categoria'. Os dois pontos (..) é para dizer que está uma pasta acima, e não na routes.
+const Categoria = mongoose.model('categorias');
 
 //em vez de usar app.get, usa-se router.get
 router.get('/', (req,res) => {
@@ -17,6 +22,44 @@ router.get('/categorias', (req,res) => {
 
 router.get('/categorias/add', (req, res) => {
     res.render('admin/addcategorias')
+})
+
+router.post('/categorias/nova', (req, res) => {
+
+    //Validando dados do formulário
+    var erros = [];
+
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
+        //add objeto ao array (com 'push')
+        erros.push({texto: "Nome Inválido!"});
+    }
+
+    if(!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null){
+        erros.push({texto: "Slug Inválido"});
+    }
+
+    if(req.body.nome.length < 2){
+        erros.push({texto: "A categoria deve conter pelo menos 2 caracteres."});
+    }
+
+    if(erros.length > 0){
+        res.render('admin/addcategorias', {erros: erros});
+    } else{
+        //variável que vai receber os dados do formulário
+        const novaCategoria = {
+            nome: req.body.nome,
+            slug: req.body.slug
+        } 
+
+        //Criar um objeto dentro da classe Categoria
+        new Categoria(novaCategoria).save().then(() => {
+            req.flash("success_msg", "Categoria criada com sucesso!");
+            res.redirect('/admin/categorias');
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao salvar a categoria, tente novamente.");
+            res.redirect('/admin');
+        })
+    }   
 })
 
 module.exports = router;

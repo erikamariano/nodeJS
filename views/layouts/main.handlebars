@@ -7,8 +7,10 @@
     <title>Node JS</title>
 </head>
 <body>
-    {{>_navbar}}
+    {{>_navbar}} {{!chamando o arquivo _navbar}}
+    
     <div class="container mt-4">
+        {{>_msg}} {{!chamando o arquivo _msg}}
         {{{body}}}
     </div>
     
