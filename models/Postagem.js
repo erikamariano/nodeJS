@@ -17,12 +17,12 @@ const Postagem = new Schema({
     conteudo:{
         type: String,
         required: true
-    }
+    },
     categoria:{
         type: Schema.Types.ObjectId,
-        ref: 'categorias' //nome que demos para o modelo de Categorias (linha 21, file Categorias).
+        ref: 'categorias', //nome que demos para o modelo de Categorias (linha 21, file Categorias).
         required: true
-    }
+    },
     data:{
         type: Date,
         default: Date.now()

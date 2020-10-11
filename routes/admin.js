@@ -18,7 +18,7 @@ router.get('/post', (req,res) => {
 
 router.get('/categorias', (req,res) => {
     //Mostrando as categorias já criadas
-    //o sort{date:'desc'} é ára listar por data de criação, main nova para mais antiga.
+    //o sort{date:'desc'} é para listar por data de criação, mais nova para mais antiga.
     Categoria.find().sort({date:'desc'}).then((categorias) => {
         res.render('admin/categorias', {categorias: categorias.map(categorias => categorias.toJSON())});
     }).catch((err) => {
@@ -109,7 +109,19 @@ router.post('/categorias/deletar', (req,res) => {
 })
 
 router.get('/postagens', (req,res) => {
-    res.render('/admin/postagens');
+    res.render('admin/postagens');
+})
+
+router.get('/postagens/add', (req,res) => {
+    //Mostrar todas as categorias criadas, para na hora da postagem poder escolher em qual se encaixa.
+    Categoria.find().then((categorias) => {
+        res.render('admin/addpostagens', {categorias: categorias.map(categorias => categorias.toJSON())})
+    }).catch((erro) => {
+        req.flash('error_msg', 'Houve um erro ao carregar a lista de categorias.');
+        res.redirect('/admin');
+    })
+
+    //res.render('admin/addpostagens');  //nome do file handlebars que tem as características da página.
 })
 
 module.exports = router;
