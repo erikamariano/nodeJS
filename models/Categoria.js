@@ -1,4 +1,4 @@
-//Para cadastrar categorias no banco de dados
+//Modelo para cadastrar categorias no banco de dados
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema; //para facilitar na hora da digitação e não ficar escrevendo 'mongoose.schema' sempre.
