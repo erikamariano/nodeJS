@@ -2,3 +2,18 @@
 <hr>
 <a href="/admin/postagens/add "><button class="btn btn-success">Nova Postagem</button></a> 
 {{!na hora que eu clicar no botão, ele me redirecionará para postagens/add}}
+
+
+{{#each postagens}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>{{titulo}}</h4>
+            <p>Descrição: {{descricao}}</p>
+            <small>Data: {{data}}</small><br>
+            <small>Categoria: {{categoria.nome}}</small>
+
+        </div>
+    </div>
+{{else}}
+    <p>Nenhuma postagem registrada</p>
+{{/each}}

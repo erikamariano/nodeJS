@@ -7,6 +7,10 @@ const mongoose = require('mongoose'); //isso é para a rota 'post', que vai add 
 require('../models/Categoria'); //para chamar o modelo 'Categoria'. Os dois pontos (..) é para dizer que está uma pasta acima, e não na routes.
 const Categoria = mongoose.model('categorias');
 
+//Chamar o model de post
+require('../models/Postagem');
+const Postagem = mongoose.model('postagens');
+
 //em vez de usar app.get, usa-se router.get
 router.get('/', (req,res) => {
     res.render("admin/index")
@@ -109,7 +113,15 @@ router.post('/categorias/deletar', (req,res) => {
 })
 
 router.get('/postagens', (req,res) => {
-    res.render('admin/postagens');
+
+    //Listar todas as postagens feitas:
+    Postagem.find().populate('categoria').sort({data:"desc"}).then((postagens) => {
+        res.render('admin/postagens', {postagens: postagens.map(postagens => postagens.toJSON())});
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao listar as postagens');
+        res.redirect('admin/postagens');
+    })
+    
 })
 
 router.get('/postagens/add', (req,res) => {
@@ -122,6 +134,36 @@ router.get('/postagens/add', (req,res) => {
     })
 
     //res.render('admin/addpostagens');  //nome do file handlebars que tem as características da página.
+})
+
+router.post('/postagens/nova', (req,res) => {
+
+    //validação (como coloquei o 'required' no frontend, a única validação agora será a do campo '0' de categorias)
+    var erros = [];
+
+    if(req.body.categoria == '0'){
+        erros.push({texto: "Categoria inválida, registre novamente."})
+    }
+
+    if(erros.length > 0){
+        res.render('admin/addpostagens', {erros: erros})
+    }else{
+        
+        const novaPostagem = {
+            titulo: req.body.titulo,
+            slug: req.body.slug,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            categoria: req.body.categoria,
+        }
+        new Postagem(novaPostagem).save().then(() => {
+            req.flash('success_msg', 'Post criado com sucesso!');
+            res.redirect('/admin/postagens');
+        }).catch((err) => {
+            req.flash('error_msg', "Erro ao salvar a postagem");
+            res.redirect('/admin/postagens');
+        })
+    }
 })
 
 module.exports = router;

@@ -1,9 +1,15 @@
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div> {{!texto da linha 133 do file admin.js}}
+{{else}}
+
+{{/each}}
+
 <div class="card">
     <div class="card-body">
         <h4>Nova Postagem</h4>
-        <form action="">
+        <form action="/admin/postagens/nova" method="POST">
             <label for="titulo">Título: </label>
-            <input type="text" name="titulo" class="form-control">
+            <input type="text" name="titulo" class="form-control" required> {{!'required' serve como uma validação, mas feita no frontend, em vez do backend, mas é sempre bom ter validação no backend}}
             
             <label for="slug">Slug: </label>
             <input type="text" name="slug" class="form-control">
