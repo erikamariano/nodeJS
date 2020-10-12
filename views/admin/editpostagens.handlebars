@@ -1,0 +1,36 @@
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div> {{!texto da linha 133 do file admin.js}}
+{{else}}
+
+{{/each}}
+
+<div class="card">
+    <div class="card-body">
+        <h4>Editar Postagem</h4>
+        <form action="/admin/postagens/edit" method="POST">
+        <input type="hidden" value="{{postagem._id}}" name="id">
+            <label for="titulo">Título: </label>
+            <input type="text" name="titulo" class="form-control" value="{{postagem.titulo}}"> {{!'value' serve para os valores já virem preenchidos na hora de editar.}}
+            
+            <label for="slug">Slug: </label>
+            <input type="text" name="slug" class="form-control" value="{{postagem.slug}}">
+
+            <label for="descricao"> Descrição: </label>
+            <input type="text" name="descricao" class="form-control" value="{{postagem.descricao}}">
+            
+            <label for="conteudo">Conteúdo: </label>
+            <textarea name="conteudo" class="form-control">{{postagem.conteudo}}</textarea> {{!textarea não tem campo 'value', por isso fica entre as tags.}}
+
+            <label for="categoria">Categoria: </label>
+            <select name="categoria" class="custom-select">
+                {{#each categorias}}
+                    <option value="{{_id}}">{{nome}}</option>
+                {{else}}
+                    <option value="0">Nenhuma categoria registrada</option>
+                {{/each}}
+            </select><br>
+
+            <button class="btn btn-success mt-4" type="submit">Editar Post</button>
+        </form>
+    </div>
+</div>

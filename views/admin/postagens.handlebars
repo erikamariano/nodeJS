@@ -10,7 +10,14 @@
             <h4>{{titulo}}</h4>
             <p>Descrição: {{descricao}}</p>
             <small>Data: {{data}}</small><br>
-            <small>Categoria: {{categoria.nome}}</small>
+            <small>Categoria: {{categoria.nome}}</small><br>
+
+            <a href="/admin/postagens/edit/{{_id}}"><button class="btn btn-success mt-3">Editar Post</button></a>
+
+            <form action="/admin/postagens/deletar" method="POST">
+                <input type="hidden" name="id" value="{{_id}}">
+                <button type="submit" class="btn btn-danger mt-2">Deletar Post</button>
+            </form>
 
         </div>
     </div>

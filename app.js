@@ -12,6 +12,10 @@ const path = require('path'); //serve para manipular pastas (trabalhar com diret
 const session = require('express-session');
 const flash = require('connect-flash'); //o flash é um tipo bem curto de sessão, serve para salvar as coisas por um tempo, mas quando a página é atualizada some. Ideal para mostrar as msg de erro e sucesso.
 
+//Chamar o model de postagens para aparecer na página home:
+require('./models/Postagem');
+const Postagem = mongoose.model('postagens');
+
 
 //Configurações
     //Configurando as sessões
@@ -57,6 +61,21 @@ const flash = require('connect-flash'); //o flash é um tipo bem curto de sessã
 
 //Rotas
 app.use('/admin', admin); // criando um grupo de páginas com a rota admin.
+
+//Rota principal
+app.get('/', (req,res) => {
+    Postagem.find().populate('categoria').lean().sort({data:'desc'}).then((postagens) => {
+        res.render('index', {postagens: postagens});
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao carregar posts, tente novamente.');
+        res.redirect('/404');
+    })    
+})
+
+//Rota de erro 404
+app.get('/404', (req,res) => {
+    res.send('Erro 404!');
+})
 
 //Outros
 const PORT = 3031;
