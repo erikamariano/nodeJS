@@ -48,6 +48,7 @@ const Postagem = mongoose.model('postagens');
     })
 
     //Configurando a pasta public
+    //Isso faz com que o express crie automaticamente rotas para todos os arquivos da pasta puclic.
     app.use(express.static(path.join(__dirname, 'public')));
 
     //Criando um middleware
