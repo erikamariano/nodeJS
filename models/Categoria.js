@@ -18,5 +18,5 @@ const Categoria = new Schema({
     }
 })
 
-mongoose.model("categorias", Categoria); //esse 'categorias' vai ser chamado no arquivo de routes. E é o nome da classe a ser criada.
+mongoose.model("categorias", Categoria); //esse 'categorias' vai ser chamado no arquivo de routes e no app.js. E é o nome da classe a ser criada.
 

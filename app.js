@@ -16,6 +16,10 @@ const flash = require('connect-flash'); //o flash é um tipo bem curto de sessã
 require('./models/Postagem');
 const Postagem = mongoose.model('postagens');
 
+//Chamar o model de categorias para visualizar sem estar logado:
+require("./models/Categoria");
+const Categoria = mongoose.model('categorias');
+
 
 //Configurações
     //Configurando as sessões
@@ -71,6 +75,52 @@ app.get('/', (req,res) => {
         req.flash('error_msg', 'Erro ao carregar posts, tente novamente.');
         res.redirect('/404');
     })    
+})
+
+//Ver as categorias criadas (sem ser pelo admin. O admin será a visão de quando o usuário estiver logado)
+app.get("/categorias", (req,res) => {
+    Categoria.find().lean().then((categorias) => {
+        res.render("categorias/index", {categorias: categorias});
+    }).catch((err) => {
+        req.flash('error_msg', 'Houve um erro interno ao listar as categorias');
+        res.redirect('/');
+    })
+})
+
+app.get('/categorias/:slug', (req,res) => {
+    Categoria.findOne({slug: req.params.slug}).lean().then((categoria) => {
+        if(categoria){
+            
+            Postagem.find({categoria: categoria._id}).lean().then((postagens) => {
+                res.render('categorias/postagens', {postagens: postagens, categoria: categoria});
+            }).catch((err) => {
+                req.flash('error_msg', "Houve um erro ao listar os posts. Tente novamente.");
+                res.redirect('/categorias');
+            })
+
+        }else{
+            req.flash('error_msg', 'Esta categoria não existe.');
+            res.redirect('/categorias');
+        }
+    }).catch((err) => {
+    req.flash('error_msg', "Erro interno. A categoria não foi encontrada. Tente novamente.");
+    res.redirect('/categorias');
+    })
+})
+
+//Ler a postagem escolhida
+app.get('/postagem/:slug', (req,res) => {
+    Postagem.findOne({slug: req.params.slug}).lean().populate('categoria').then((postagem) => {
+        if(postagem){
+            res.render("postagem/index", {postagem: postagem});
+        } else{
+            req.flash("error_msg", "Esta postagem não existe.");
+            res.redirect("/");
+        }
+    }).catch((err) => {
+        req.flash("error_msg", "Erro interno. A postagem não foi encontrada. Tente novamente.");
+        res.redirect("/");
+    })
 })
 
 //Rota de erro 404
