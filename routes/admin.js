@@ -4,7 +4,7 @@ const router = express.Router();
 
 //Chamar um model que está em um documento externo
 const mongoose = require('mongoose'); //isso é para a rota 'post', que vai add dados no db.
-require('../models/Categoria'); //para chamar o modelo 'Categoria'. Os dois pontos (..) é para dizer que está uma pasta acima, e não na routes.
+require('../models/Categoria'); //para chamar o modelo 'Categoria'. Os dois pontos (..) são para dizer que está uma pasta acima, e não na routes.
 const Categoria = mongoose.model('categorias');
 
 //Chamar o model de post

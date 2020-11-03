@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 
 const admin = require('./routes/admin');
+const usuarios = require('./routes/usuario');
 
 const path = require('path'); //serve para manipular pastas (trabalhar com diretórios)
 
@@ -43,7 +44,7 @@ const Categoria = mongoose.model('categorias');
     //Configurando Handlebars
     app.engine('handlebars', handlebars({defaultLayout:'main'}));
     app.set('view engine', 'handlebars');
-    //Confuigurando Mongoose
+    //Configurando Mongoose
     mongoose.Promise = global.Promise;
     mongoose.connect('mongodb://localhost/blogapp',{useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
         console.log("Conectado ao Mongo!");
@@ -66,6 +67,8 @@ const Categoria = mongoose.model('categorias');
 
 //Rotas
 app.use('/admin', admin); // criando um grupo de páginas com a rota admin.
+app.use('/usuarios', usuarios);  //criando um grupo de páginas com a rota usuarios.
+
 
 //Rota principal
 app.get('/', (req,res) => {
