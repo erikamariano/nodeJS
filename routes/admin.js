@@ -11,8 +11,11 @@ const Categoria = mongoose.model('categorias');
 require('../models/Postagem');
 const Postagem = mongoose.model('postagens');
 
+const {ehAdmin} = require("../helpers/ehAdmin");
+
+
 //em vez de usar app.get, usa-se router.get
-router.get('/', (req,res) => {
+router.get('/', ehAdmin, (req,res) => {
     res.render("admin/index")
 })
 
@@ -20,7 +23,7 @@ router.get('/', (req,res) => {
 //     res.send("Página de Posts!")
 // })
 
-router.get('/categorias', (req,res) => {
+router.get('/categorias', ehAdmin, (req,res) => {
     //Mostrando as categorias já criadas
     //o sort{date:'desc'} é para listar por data de criação, mais nova para mais antiga.
     Categoria.find().sort({date:'desc'}).then((categorias) => {
@@ -31,11 +34,11 @@ router.get('/categorias', (req,res) => {
     })  
 })
 
-router.get('/categorias/add', (req, res) => {
+router.get('/categorias/add', ehAdmin, (req, res) => {
     res.render('admin/addcategorias')
 })
 
-router.post('/categorias/nova', (req, res) => {
+router.post('/categorias/nova', ehAdmin, (req, res) => {
 
     //Validando dados do formulário
     var erros = [];
@@ -73,7 +76,7 @@ router.post('/categorias/nova', (req, res) => {
     }   
 })
 
-router.get('/categorias/edit/:id', (req,res) => {
+router.get('/categorias/edit/:id', ehAdmin, (req,res) => {
     
         Categoria.findOne({_id:req.params.id}).lean().then((categoria) => {  //para os campos já virem preenchidos na hora de editar.
         res.render('admin/editcategorias', {categoria: categoria});    
@@ -83,7 +86,7 @@ router.get('/categorias/edit/:id', (req,res) => {
     }) 
 })
 
-router.post('/categorias/edit', (req,res) => {
+router.post('/categorias/edit', ehAdmin, (req,res) => {
     Categoria.findOne({_id: req.body.id}).then((categoria) => {
         categoria.nome = req.body.nome
         categoria.slug = req.body.slug
@@ -102,7 +105,7 @@ router.post('/categorias/edit', (req,res) => {
     })
 })
 
-router.post('/categorias/deletar', (req,res) => {
+router.post('/categorias/deletar', ehAdmin, (req,res) => {
     Categoria.remove({_id: req.body.id}).then(() => {
         req.flash('success_msg', 'Categoria deletada com sucesso!');
         res.redirect('/admin/categorias');
@@ -112,7 +115,7 @@ router.post('/categorias/deletar', (req,res) => {
     })
 })
 
-router.get('/postagens', (req,res) => {
+router.get('/postagens', ehAdmin, (req,res) => {
 
     //Listar todas as postagens feitas:
     Postagem.find().populate('categoria').sort({data:"desc"}).then((postagens) => {
@@ -124,7 +127,7 @@ router.get('/postagens', (req,res) => {
     
 })
 
-router.get('/postagens/add', (req,res) => {
+router.get('/postagens/add', ehAdmin, (req,res) => {
     //Mostrar todas as categorias criadas, para na hora da postagem poder escolher em qual se encaixa.
     Categoria.find().then((categorias) => {
         res.render('admin/addpostagens', {categorias: categorias.map(categorias => categorias.toJSON())})
@@ -136,7 +139,7 @@ router.get('/postagens/add', (req,res) => {
     //res.render('admin/addpostagens');  //nome do file handlebars que tem as características da página.
 })
 
-router.post('/postagens/nova', (req,res) => {
+router.post('/postagens/nova', ehAdmin, (req,res) => {
 
     //validação (como coloquei o 'required' no frontend, a única validação agora será a do campo '0' de categorias)
     var erros = [];
@@ -166,7 +169,7 @@ router.post('/postagens/nova', (req,res) => {
     }
 })
 
-router.get('/postagens/edit/:id', (req,res) => {
+router.get('/postagens/edit/:id', ehAdmin, (req,res) => {
 
     //Para os campos categorias aparecerem na hora de editar:
     Postagem.findOne({_id: req.params.id}).lean().then((postagem) => {
@@ -184,7 +187,7 @@ router.get('/postagens/edit/:id', (req,res) => {
     })    
 })
 
-router.post('/postagens/edit', (req,res) => {
+router.post('/postagens/edit', ehAdmin, (req,res) => {
 
     //esse id que vai ser procurado é o mesmo que está no file 'editpostagens', no campo input value id (linha 11)
     Postagem.findOne({_id: req.body.id}).then((postagem) => {
@@ -207,7 +210,7 @@ router.post('/postagens/edit', (req,res) => {
     })
 })
 
-router.post('/postagens/deletar', (req,res) => {
+router.post('/postagens/deletar', ehAdmin, (req,res) => {
 
     //esse id que vai pegar é o mesmo do file 'postsgens' (linha 18)
     Postagem.remove({_id: req.body.id}).then(() => {

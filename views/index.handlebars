@@ -3,7 +3,16 @@
   <p class="lead">Construção de plataforma para aprender backend com NodeJS</p>
   <hr class="my-4">
   <p>Fazemos uso de tecnologias como Handlebars, Bootstrap, Express, MongoDB e muito mais!</p>
-  <a class="btn btn-primary btn-lg" href="#" role="button">Crie uma Conta</a>
+
+    {{#if user}} {{! se o usuário estiver cadastrado não vai aparecer o botão de criar a conta}}
+
+    {{else}}
+
+        <a class="btn btn-primary btn-lg" href="/usuarios/registro" role="button">Crie uma Conta</a>
+
+    {{/if}}
+
+  
 </div>
 
 <hr>

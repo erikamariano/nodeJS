@@ -10,6 +10,13 @@
     {{>_navbar}} {{!chamando o arquivo _navbar}}
     
     <div class="container mt-4">
+
+        {{#if error}} {{!esquema para aparecer msg de erro de autenticação}}
+            <div class="alert alert-danger">{{error}}</div>
+        {{else}}
+
+        {{/if}}
+
         {{>_msg}} {{!chamando o arquivo _msg}}
         {{{body}}}
     </div>

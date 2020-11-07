@@ -21,6 +21,14 @@ const Postagem = mongoose.model('postagens');
 require("./models/Categoria");
 const Categoria = mongoose.model('categorias');
 
+//Chamar o model de usuários para ser usado junto com o passport:
+require("./models/Usuario");
+const Usuario = mongoose.model('usuarios');
+
+//Chamar sistema de autenticação de usuário
+const passport = require('passport');
+require("./config/auth")(passport) //nome da função criada no arquivo 'auth'
+
 
 //Configurações
     //Configurando as sessões
@@ -29,12 +37,19 @@ const Categoria = mongoose.model('categorias');
         resave: true,
         saveUnitialized: true
     }))
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+
     app.use(flash())
+
     //Middleware para as sessões
     app.use((req, res, next) => {
         //Criando variáveis globais para mostrar msg para o usuário. Locals é para variáveis globais.
         res.locals.success_msg = req.flash('success_msg')
         res.locals.error_msg = req.flash('error_msg')
+        res.locals.error = req.flash('error')
+        res.locals.user = req.user || null;    
         next();
     })
 

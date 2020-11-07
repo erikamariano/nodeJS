@@ -8,6 +8,9 @@ const Usuario = mongoose.model("usuarios");
 //módulo de encriptar senhas:
 const bcrypt = require('bcryptjs');
 
+//módulo de autenticação de usuários:
+const passport = require("passport");
+
 
 router.get("/registro", (req, res) => {
     res.render("usuarios/registro")
@@ -90,6 +93,21 @@ router.post("/registro", (req,res) =>{
 
 router.get('/login', (req,res) => {
     res.render('usuarios/login');
+})
+
+router.post('/login', (req, res, next) => {
+    
+    passport.authenticate('local', {
+        successRedirect: "/",
+        failureRedirect: "/usuarios/login",
+        failureFlash: true
+    })(req, res, next)
+})
+
+router.get('/logout', (req, res) => {
+    req.logout();
+    req.flash("success_msg", "Deslogado com sucesso");
+    res.redirect('/');
 })
 
 module.exports = router;
